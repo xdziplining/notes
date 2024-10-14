@@ -1,18 +1,58 @@
-<link rel="icon" href="http://xdzipper.fr.to/favicon-xdziper.svg" type="image/x-icon">
-<title>XDZIPPER's Website! :D</title>
-<link rel="stylesheet" href="http://xdzipper.fr.to/style.css">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XDZIPPER's Website! :D</title>
+  <link rel="stylesheet" href="http://xdzipper.fr.to/style.css">
+</head>
 <body style="background-color: #0023a0">
-<div style="text-align: center">
-<img src="http://xdzipper.fr.to/notes/xdzipper-notes.svg">
-<h3></h3>
-</div>
-<div style="text-align: center">
-<textarea id="textarea"></textarea>
-</div>
-<div style="text-align: center">
-<h3>
-</h3>
-<button id="downloadButton">Download Save File</button> 
- <button>Load Save File</button>
-</div>
-<script src="script.js"></script>
+  <div style="text-align: center">
+    <img src="http://xdzipper.fr.to/notes/xdzipper-notes.svg">
+    <h3></h3>
+  </div>
+  <div style="text-align: center">
+    <textarea id="textarea"></textarea>
+  </div>
+  <div style="text-align: center">
+    <h3>
+    </h3>
+    <button id="downloadButton">Download Save File</button>
+    <button id="loadButton">Load Save File</button>
+  </div>
+
+  <script>
+    const downloadButton = document.getElementById('downloadButton');
+    const loadButton = document.getElementById('loadButton');
+    const textarea = document.getElementById('textarea');
+
+    downloadButton.addEventListener('click', () => {
+      const textContent = textarea.value;
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'savefile.xdn';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    loadButton.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.xdn';
+
+      input.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            textarea.value = e.target.result;
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      input.click();
+    });
+  </script>
+</body>
+</html>
